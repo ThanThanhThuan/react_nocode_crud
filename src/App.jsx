@@ -90,7 +90,7 @@ function App() {
 
   return (
     <div className="container">
-      <h1>Product Manager (Table: seitb)</h1>
+      <h1>Than's Product Manager</h1>
 
       {error && <div className="error">Error: {error}</div>}
 
