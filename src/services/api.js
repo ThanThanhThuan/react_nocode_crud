@@ -36,7 +36,7 @@ const request = async (url, method = 'GET', body = null) => {
         throw new Error(`API Error: ${response.statusText}`);
     }
 
-    // Handle cases where DELETE might not return JSON
+    // Handle cases where DELETE might not return JSON content
     if (method === 'DELETE') return true;
 
     return await response.json();
@@ -47,8 +47,12 @@ export const api = {
     getAll: async () => {
         const url = getUrl('read');
         const data = await request(url);
-        // Normalize data: ensure we always return an array
-        return Array.isArray(data) ? data : (data.data || []);
+
+        // 1. Normalize data: ensure we have an array
+        const items = Array.isArray(data) ? data : (data.data || []);
+
+        // 2. FILTER: Return only items where pp === "product"
+        return items.filter(item => item.pp === 'product');
     },
 
     // POST /create/seitb
@@ -56,7 +60,7 @@ export const api = {
         const url = getUrl('create');
         const payload = {
             ...productData,
-            pp: "product" // Enforce requirement here
+            pp: "product" // Force property
         };
         return await request(url, 'POST', payload);
     },
@@ -66,7 +70,7 @@ export const api = {
         const url = getUrl('update', id);
         const payload = {
             ...productData,
-            pp: "product" // Maintain consistency
+            pp: "product" // Maintain property
         };
         return await request(url, 'PUT', payload);
     },
